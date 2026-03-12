@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Login - Habit Tracker</title>
-  </head>
-  <body>
+{% extends "layout.html" %}
+
+{% block body %}
+
     <h2>Login</h2>
 
     <form action="/login" method="post">
@@ -17,5 +15,4 @@
       <button type="submit">Login</button>
     </form>
   <p>Don't have an account? <a href="/register">Register</a></p>
-  </body>
-</html>
+{% endblock %}
