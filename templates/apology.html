@@ -1,8 +1,21 @@
 {% extends "layout.html" %}
+
 {% block body %}
+<div class="auth-container">
+    <div class="custom-card" style="border-top-color: var(--danger);">
+        <div style="text-align: center;">
+            <h1 style="font-size: 4rem; color: var(--danger); margin: 0;">{{ code }}</h1>
+            
+            <h2 style="margin-top: 0;">Something went wrong</h2>
+            
+            <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 30px;">
+                {{ message }}
+            </p>
 
-<h2>Error {{ code }}</h2>
-<p>{{ message }}</p>
-
-<a href= "/">Return to Homepage</a>
+            <a href="/" class="btn-primary" style="display: inline-block; text-decoration: none;">
+                Return to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

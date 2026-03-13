@@ -1,22 +1,136 @@
 {% extends "layout.html" %}
 
 {% block body %}
+<style>
+    /* Centering and Container */
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 75vh;
+    }
 
-<h2>Create an Account</h2>
+    .register-card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+    }
 
-<form action="/register" method="post">
-    <label>Username</label><br>
-    <input type="text" name="username" required><br><br>
+    .register-card h2 {
+        color: #00796B; /* Teal Branding */
+        font-size: 2rem;
+        margin-bottom: 8px;
+        font-weight: 800;
+    }
 
-    <label>Password</label><br>
-    <input type="password" name="password" required><br><br>
+    .register-card p {
+        color: #666;
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+    }
 
-    <label>Confirm Password</label><br>
-    <input type="password" name="confirmation" required><br><br>
+    /* Form Layout */
+    .form-group {
+        text-align: left;
+        margin-bottom: 15px;
+    }
 
-    <button type="submit">Register</button>
-</form>
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #333;
+        font-size: 0.85rem;
+    }
 
-<p>Already have an account? <a href="/login">Login</a></p>
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
 
+    .form-group input:focus {
+        outline: none;
+        border-color: #00796B;
+        box-shadow: 0 0 0 4px rgba(0, 121, 107, 0.1);
+    }
+
+    /* Action Button */
+    .btn-register {
+        width: 100%;
+        background-color: #00796B;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+        margin-top: 15px;
+    }
+
+    .btn-register:hover {
+        background-color: #005a50;
+    }
+
+    .btn-register:active {
+        transform: scale(0.98);
+    }
+
+    /* Redirect Link */
+    .login-link {
+        margin-top: 25px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .login-link a {
+        color: #C9A050; /* Gold Branding */
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <h2>Join Us</h2>
+        <p>Start your journey toward better habits today.</p>
+
+        <form action="/register" method="post">
+            <div class="form-group">
+                <label for="username">Choose a Username</label>
+                <input type="text" id="username" name="username" placeholder="e.g. habit_hero" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Create Password</label>
+                <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmation">Confirm Password</label>
+                <input type="password" id="confirmation" name="confirmation" placeholder="Repeat your password" required>
+            </div>
+
+            <button type="submit" class="btn-register">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already a member? <a href="/login">Sign in here</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

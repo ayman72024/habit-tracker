@@ -1,17 +1,101 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Habit Tracker</title>
-    </head>
-    <body>
-        <nav>
-            <a href="/">Home</a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker | Build Your Better Self</title>
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            background-color: #f8fbfb;
+        }
+
+        /* --- MODERN NAVBAR --- */
+        nav {
+            background: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* --- THE BRAND (Logo + Name) --- */
+        .brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 10px;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #00796B; /* Teal */
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-sub {
+            color: #C9A050; /* Gold */
+        }
+
+        /* --- NAV LINKS --- */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #546E7A;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #00796B;
+        }
+
+        .btn-add {
+            background-color: #00796B;
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            padding: 2rem 5%;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="brand">
+            <svg width="32" height="32" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" fill="#00796B" />
+                <path d="M30,50 l15,15 l30,-30" stroke="white" stroke-width="10" fill="none" stroke-linecap="round"/>
+            </svg>
+            <span class="brand-name">Habit <span class="brand-sub">Tracker</span></span>
+        </a>
+
+        <div class="nav-links">
             <a href="/login">Login</a>
             <a href="/register">Register</a>
-            <a href="/add">Add Habit</a> 
-            <a href = "/logout">Logout </a>
-        </nav>
-        <hr>
+            <a href="/add" class="btn-add">+ Add Habit</a>
+        </div>
+    </nav>
+
+    <div class="container">
         {% block body %}{% endblock %}
-    </body>
+    </div>
+
+</body>
 </html>
