@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>Add Habit</h1>
+
+<form action="/add" method="post">
+    <div>
+        <input
+            autocomplete="off"
+            autofocus
+            name="name"
+            placeholder="Habit name"
+            type="text"
+        >
+    </div>
+
+    <div>
+        <input
+            name="target_days"
+            placeholder="Days per week (1-7)"
+            type="number"
+            min="1"
+            max="7"
+        >
+    </div>
+
+    <button type="submit">Add Habit</button>
+</form>
+{% endblock %}

@@ -1,5 +1,32 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <h1>WELCOME TO HABIT TRACKER</h1>
+<h1>Your Habits</h1>
+
+{% if habits %}
+<ul>
+  {% for habit in habits %}
+  <li>
+    <strong>{{ habit.name }}</strong>
+    — {{ habit.completed_this_week }} / {{ habit.target_days }} days this week
+
+    {% if habit.completed_today %}
+    — Completed today
+    {% else %}
+    <form action="/complete/{{ habit.id }}" method="post" style="display:inline;">
+      <button type="submit">Mark Complete</button>
+    </form>
+    {% endif %}
+
+    <a href="/edit/{{ habit.id }}">Edit</a>
+
+    <form action="/delete/{{ habit.id }}" method="post" style="display:inline;">
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No habits yet.</p>
+{% endif %}
 {% endblock %}

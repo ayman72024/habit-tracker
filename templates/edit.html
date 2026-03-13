@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1>Edit Habit</h1>
+
+    <form action="/edit/{{ habit.id }}" method="post">
+        <div>
+            <input
+                name="name"
+                type="text"
+                placeholder="Habit name"
+                value="{{ habit.name }}"
+                required
+            >
+        </div>
+
+        <div>
+            <input
+                name="target_days"
+                type="number"
+                min="1"
+                max="7"
+                placeholder="Target days per week"
+                value="{{ habit.target_days }}"
+                required
+            >
+        </div>
+
+        <button type="submit">Save Changes</button>
+    </form>
+{% endblock %}

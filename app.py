@@ -1,12 +1,124 @@
 from flask import Flask, render_template, request, session, redirect
-from helpers import apology
+from helpers import apology, login_required
 from cs50 import SQL
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 db = SQL("sqlite:///habits.db")
+
+@app.route("/edit/<int:habit_id>", methods=["GET", "POST"])
+@login_required
+def edit(habit_id):
+    habit = db.execute(
+        "SELECT * FROM habits WHERE id = ? AND user_id = ?",
+        habit_id,
+        session["user_id"]
+    )
+
+    if len(habit) != 1:
+        return apology("Habit not found", 404)
+
+    habit = habit[0]
+
+    if request.method == "POST":
+        name = request.form.get("name")
+        target_days = request.form.get("target_days")
+
+        if not name:
+            return apology("Habit name is required", 400)
+
+        if not target_days:
+            return apology("Target days is required", 400)
+
+        try:
+            target_days = int(target_days)
+        except ValueError:
+            return apology("Target days must be a number", 400)
+
+        if target_days < 1 or target_days > 7:
+            return apology("Target days must be between 1 and 7", 400)
+
+        db.execute(
+            "UPDATE habits SET name = ?, target_days = ? WHERE id = ?",
+            name,
+            target_days,
+            habit_id
+        )
+
+        return redirect("/")
+
+    return render_template("edit.html", habit=habit)
+
+@app.route("/delete/<int:habit_id>", methods=["POST"])
+@login_required
+def delete(habit_id):
+    habit = db.execute(
+        "SELECT * FROM habits WHERE id = ? AND user_id = ?",
+        habit_id,
+        session["user_id"]
+    )
+
+    if len(habit) != 1:
+        return apology("Habit not found", 404)
+
+    db.execute("DELETE FROM habit_logs WHERE habit_id = ?", habit_id)
+    db.execute("DELETE FROM habits WHERE id = ?", habit_id)
+
+    return redirect("/")
+
+@app.route("/add", methods=["GET", "POST"])
+@login_required
+def add():
+  if request.method == "POST":
+    name = request.form.get("name")
+    target_days = request.form.get("target_days")
+
+    if not name:
+      return apology("Habit name is required", 400)
+    if not target_days:
+      return apology("Target days is required", 400)
+    try:
+      target_days = int(target_days)
+    except ValueError:
+      return apology("Target days must be a number", 400)
+    if target_days < 1 or target_days > 7:
+      return apology("Target days must be between 1 and 7", 400)
+    
+    db.execute(
+      "INSERT INTO habits (user_id, name, target_days) VALUES (?, ?, ?)",
+      session["user_id"],
+      name,
+      target_days
+    )
+
+    return redirect("/")
+  return render_template("add.html")
+
+@app.route("/complete/<int:habit_id>", methods=["POST"])
+@login_required
+def complete(habit_id):
+  today = date.today().isoformat()
+  habit = db.execute(
+      "SELECT * FROM habits WHERE id = ? AND user_id = ?",
+      habit_id, session["user_id"]
+  )
+
+  if len(habit) != 1:
+    return apology("Habit not found", 404)
+  existing = db.execute(
+    "SELECT * FROM habit_logs WHERE habit_id = ? AND completed_date = ?",
+    habit_id, today
+  )
+
+  if not existing:
+    db.execute(
+      "INSERT INTO habit_logs(habit_id, completed_date) VALUES (?,?)",
+      habit_id, today
+    )
+  return redirect("/")
 
 @app.route("/init")
 def init():
@@ -17,10 +129,50 @@ def init():
              hash TEXT NOT NULL
              )
              """)
+  db.execute("""
+        CREATE TABLE IF NOT EXISTS habits(
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             user_id INTEGER NOT NULL,
+             name TEXT NOT NULL,
+             target_days INTEGER NOT NULL,
+             created_at DATE DEFAULT CURRENT_DATE,
+             FOREIGN KEY(user_id) REFERENCES users(id)
+             )
+             """)
+  db.execute("""
+      CREATE TABLE IF NOT EXISTS habit_logs(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+             habit_id INTEGER NOT NULL,
+             completed_date DATE NOT NULL,
+             FOREIGN KEY(habit_id) REFERENCES habits(id)
+             )
+             """)
   return "Database initialized!"
 @app.route("/")
+@login_required
 def index():
-  return render_template("index.html")
+  habits = db.execute("""
+               SELECT 
+                      habits.id,
+                      habits.name,
+                      habits.target_days,
+                      COUNT(CASE
+                          WHEN strftime('%Y-%W',habit_logs.completed_date) = strftime('%Y-%W', 'now')
+                          THEN 1
+                      END) AS completed_this_week,
+                      COUNT(CASE
+                          WHEN habit_logs.completed_date = date('now')
+                      THEN 1
+                      END) AS completed_today
+                      FROM habits
+                      LEFT JOIN habit_logs
+                        ON habits.id = habit_logs.habit_id
+                      WHERE habits.user_id = ?
+                      GROUP BY habits.id
+                      ORDER BY habits.created_at DESC
+                  
+               """,session["user_id"])
+  return render_template("index.html", habits = habits)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -45,7 +197,7 @@ def login():
 @app.route("/logout")
 def logout():
   session.clear()
-  return redirect("/")
+  return redirect("/login")
 
 @app.route("/register", methods=["GET","POST"])
 def register():
