@@ -9,6 +9,37 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key"
 db = SQL("sqlite:///habits.db")
 
+@app.route("/progress")
+@login_required
+def progress():
+    habits = db.execute("""
+        SELECT 
+            habits.id,
+            habits.name,
+            habits.target_days,
+
+            COUNT(CASE
+                WHEN strftime('%Y-%W', habit_logs.completed_date) = strftime('%Y-%W', 'now')
+                THEN 1
+            END) AS completed_this_week
+
+        FROM habits
+        LEFT JOIN habit_logs
+            ON habits.id = habit_logs.habit_id
+        WHERE habits.user_id = ?
+        GROUP BY habits.id
+        ORDER BY habits.created_at DESC
+    """, session["user_id"])
+
+    for habit in habits:
+        habit["days_left"] = max(habit["target_days"] - habit["completed_this_week"], 0)
+        if habit["target_days"] > 0:
+            habit["percent"] = min(int((habit["completed_this_week"] / habit["target_days"]) * 100), 100)
+        else:
+            habit["percent"] = 0
+
+    return render_template("progress.html", habits=habits)
+
 @app.route("/edit/<int:habit_id>", methods=["GET", "POST"])
 @login_required
 def edit(habit_id):

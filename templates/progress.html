@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="progress-page">
+    <div class="progress-header">
+        <h1>Your Weekly Progress</h1>
+        <p>Track how close you are to reaching each habit goal.</p>
+    </div>
+
+    {% if habits %}
+        <div class="progress-list">
+            {% for habit in habits %}
+                <div class="progress-card">
+                    <div class="progress-card-top">
+                        <div>
+                            <h3>{{ habit.name }}</h3>
+                            <p>{{ habit.completed_this_week }} of {{ habit.target_days }} days completed</p>
+                        </div>
+
+                        {% if habit.days_left == 0 %}
+                            <span class="progress-status success">Goal Reached</span>
+                        {% else %}
+                            <span class="progress-status pending">{{ habit.days_left }} day{% if habit.days_left != 1 %}s{% endif %} left</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="big-progress-bar">
+                        <div class="big-progress-fill" style="width: {{ habit.percent }}%;"></div>
+                    </div>
+
+                    <div class="progress-footer">
+                        <span>{{ habit.percent }}% complete</span>
+                        {% if habit.days_left == 0 %}
+                            <span class="goal-text">You smashed this week's goal 🎉</span>
+                        {% else %}
+                            <span class="goal-text">Keep going — only {{ habit.days_left }} more to go.</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-progress">
+            <h3>No habits yet</h3>
+            <p>Add your first habit to start tracking progress.</p>
+            <a href="/add" class="btn-add">+ Add Habit</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
