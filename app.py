@@ -151,28 +151,36 @@ def init():
 @app.route("/")
 @login_required
 def index():
-  habits = db.execute("""
-               SELECT 
-                      habits.id,
-                      habits.name,
-                      habits.target_days,
-                      COUNT(CASE
-                          WHEN strftime('%Y-%W',habit_logs.completed_date) = strftime('%Y-%W', 'now')
-                          THEN 1
-                      END) AS completed_this_week,
-                      COUNT(CASE
-                          WHEN habit_logs.completed_date = date('now')
-                      THEN 1
-                      END) AS completed_today
-                      FROM habits
-                      LEFT JOIN habit_logs
-                        ON habits.id = habit_logs.habit_id
-                      WHERE habits.user_id = ?
-                      GROUP BY habits.id
-                      ORDER BY habits.created_at DESC
-                  
-               """,session["user_id"])
-  return render_template("index.html", habits = habits)
+    habits = db.execute("""
+        SELECT 
+            habits.id,
+            habits.name,
+            habits.target_days,
+
+            COUNT(CASE
+                WHEN strftime('%Y-%W', habit_logs.completed_date) = strftime('%Y-%W','now')
+                THEN 1
+            END) AS completed_this_week,
+
+            COALESCE(MAX(CASE
+    WHEN habit_logs.completed_date = date('now')
+    THEN 1
+END), 0) AS completed_today
+
+        FROM habits
+
+        LEFT JOIN habit_logs
+            ON habits.id = habit_logs.habit_id
+
+        WHERE habits.user_id = ?
+
+        GROUP BY habits.id
+
+        ORDER BY habits.created_at DESC
+
+    """, session["user_id"])
+
+    return render_template("index.html", habits=habits)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

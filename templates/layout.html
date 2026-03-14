@@ -3,77 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Habit Tracker | Build Your Better Self</title>
-    
-    <style>
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            margin: 0;
-            background-color: #f8fbfb;
-        }
-
-        /* --- MODERN NAVBAR --- */
-        nav {
-            background: white;
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        /* --- THE BRAND (Logo + Name) --- */
-        .brand {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            gap: 10px;
-        }
-
-        .brand-name {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #00796B; /* Teal */
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-sub {
-            color: #C9A050; /* Gold */
-        }
-
-        /* --- NAV LINKS --- */
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #546E7A;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: #00796B;
-        }
-
-        .btn-add {
-            background-color: #00796B;
-            color: white !important;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .container {
-            padding: 2rem 5%;
-        }
-    </style>
 </head>
 <body>
 
@@ -87,10 +18,20 @@
         </a>
 
         <div class="nav-links">
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-            <a href="/add" class="btn-add">+ Add Habit</a>
-        </div>
+
+    {% if session.get("user_id") %}
+
+        <a href="/add" class="btn-add">+ Add Habit</a>
+        <a href="/logout" class = "btn-logout">Logout</a>
+
+    {% else %}
+
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+
+    {% endif %}
+
+</div>
     </nav>
 
     <div class="container">
