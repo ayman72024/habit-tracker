@@ -156,7 +156,7 @@ def complete(habit_id):
 
     return redirect("/")
 
-@app.route("/init")
+
 def init():
   db.execute("""
              CREATE TABLE IF NOT EXISTS users(
