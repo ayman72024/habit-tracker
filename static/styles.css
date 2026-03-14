@@ -575,3 +575,53 @@ body {
     .login-link a:hover {
         text-decoration: underline;
     }
+    #flash-popup-container {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 2000;
+}
+
+#flash-popup-container {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.flash-popup {
+    width: 70%;
+    max-width: 900px;
+    background: #2E7D32;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+
+    animation: slideDown 0.4s ease;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.flash-popup.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

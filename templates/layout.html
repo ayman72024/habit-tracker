@@ -18,25 +18,37 @@
         </a>
 
         <div class="nav-links">
-
-    {% if session.get("user_id") %}
-
-        <a href="/add" class="btn-add">+ Add Habit</a>
-        <a href="/logout" class = "btn-logout">Logout</a>
-
-    {% else %}
-
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-
-    {% endif %}
-
-</div>
+            {% if session.get("user_id") %}
+                <a href="/add" class="btn-add">+ Add Habit</a>
+                <a href="/logout" class="btn-logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </div>
     </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="flash-popup-container">
+                {% for message in messages %}
+                    <div class="flash-popup">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <div class="container">
         {% block body %}{% endblock %}
     </div>
-
+     <script>
+    setTimeout(() => {
+        const popups = document.querySelectorAll(".flash-popup");
+        popups.forEach(popup => {
+            popup.classList.add("hide");
+            setTimeout(() => popup.remove(), 600);
+        });
+    }, 2500);
+</script>
 </body>
 </html>

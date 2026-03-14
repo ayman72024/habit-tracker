@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, flash, redirect, render_template, request, session
 from helpers import apology, login_required
 from cs50 import SQL
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -100,25 +100,30 @@ def add():
 @app.route("/complete/<int:habit_id>", methods=["POST"])
 @login_required
 def complete(habit_id):
-  today = date.today().isoformat()
-  habit = db.execute(
-      "SELECT * FROM habits WHERE id = ? AND user_id = ?",
-      habit_id, session["user_id"]
-  )
-
-  if len(habit) != 1:
-    return apology("Habit not found", 404)
-  existing = db.execute(
-    "SELECT * FROM habit_logs WHERE habit_id = ? AND completed_date = ?",
-    habit_id, today
-  )
-
-  if not existing:
-    db.execute(
-      "INSERT INTO habit_logs(habit_id, completed_date) VALUES (?,?)",
-      habit_id, today
+    today = date.today().isoformat()
+    habit = db.execute(
+        "SELECT * FROM habits WHERE id = ? AND user_id = ?",
+        habit_id, session["user_id"]
     )
-  return redirect("/")
+
+    if len(habit) != 1:
+        return apology("Habit not found", 404)
+
+    existing = db.execute(
+        "SELECT * FROM habit_logs WHERE habit_id = ? AND completed_date = ?",
+        habit_id, today
+    )
+
+    if not existing:
+        db.execute(
+            "INSERT INTO habit_logs(habit_id, completed_date) VALUES (?, ?)",
+            habit_id, today
+        )
+        flash(f"🎉 Great job! You completed '{habit[0]['name']}' today.")
+    else:
+        flash(f"'{habit[0]['name']}' is already completed for today.")
+
+    return redirect("/")
 
 @app.route("/init")
 def init():
