@@ -22,7 +22,11 @@
             <div class="stats-text">
                 Weekly Goal: {{ habit.completed_this_week }} / {{ habit.target_days }} days
             </div>
-
+            {% if habit.streak > 0 %}
+<div class="streak-text">
+    🔥 {{ habit.streak }} day{% if habit.streak != 1 %}s{% endif %} streak
+</div>
+{% endif %}
             <div class="progress-container">
                 {% set percent = (habit.completed_this_week / habit.target_days * 100) if habit.target_days > 0 else 0 %}
                 <div class="progress-bar" style="width: {{ percent }}%;"></div>

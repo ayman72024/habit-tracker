@@ -2,7 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session
 from helpers import apology, login_required
 from cs50 import SQL
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import date
+from datetime import date, timedelta
 
 
 app = Flask(__name__)
@@ -199,9 +199,9 @@ def index():
             END) AS completed_this_week,
 
             COALESCE(MAX(CASE
-    WHEN habit_logs.completed_date = date('now')
-    THEN 1
-END), 0) AS completed_today
+                WHEN habit_logs.completed_date = date('now')
+                THEN 1
+            END), 0) AS completed_today
 
         FROM habits
 
@@ -216,8 +216,29 @@ END), 0) AS completed_today
 
     """, session["user_id"])
 
-    return render_template("index.html", habits=habits)
+    for habit in habits:
 
+        logs = db.execute("""
+            SELECT completed_date
+            FROM habit_logs
+            WHERE habit_id = ?
+            ORDER BY completed_date DESC
+        """, habit["id"])
+
+        completed_dates = {row["completed_date"] for row in logs}
+
+        streak = 0
+        current_day = date.today()
+
+        while current_day.isoformat() in completed_dates:
+            streak += 1
+            current_day -= timedelta(days=1)
+
+        habit["streak"] = streak
+    
+
+
+    return render_template("index.html", habits=habits)
 @app.route("/login", methods=["GET", "POST"])
 def login():
   if request.method == "POST":

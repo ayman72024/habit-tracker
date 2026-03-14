@@ -19,6 +19,7 @@
 
         <div class="nav-links">
             {% if session.get("user_id") %}
+                <a href="/" class = "nav-home-btn">Home</a>
                 <a href="/progress" class="btn-progress">Progress</a>
                 <a href="/add" class="btn-add">+ Add Habit</a>
                 <a href="/logout" class="btn-logout">Logout</a>

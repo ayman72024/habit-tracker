@@ -815,3 +815,32 @@ nav .btn-progress {
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15); /* Reddish shadow */
     border-color: #bd2130; /* Darker red border on hover */
 }
+.streak-text {
+    margin-top: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ff6f00;
+}
+/* Home Button (Matches Progress Button) */
+.nav-home-btn {
+    background-color: #00796B; /* Your signature teal */
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.nav-home-btn:hover {
+    background-color: #005f54; /* Slightly darker on hover */
+    transform: translateY(-3px); /* The "lift" effect */
+    box-shadow: 0 6px 15px rgba(0, 121, 107, 0.3); /* Teal glow */
+}
+
+/* Optional: Add a small margin between the home and progress buttons */
+.nav-links a + a {
+    margin-left: 5px;
+}
