@@ -131,8 +131,6 @@ Each time a user marks a habit as completed, a new entry is added to this table.
 
 ### Design Decisions
 
-### Design Decisions
-
 Several design decisions were made while building this project in order to keep the application simple, scalable, and easy to maintain.
 
 One of the major decisions was separating habit information and habit completion records into two different tables: `habits` and `habit_logs`. Instead of storing completion status directly inside the habits table, a separate `habit_logs` table was created to record each time a habit is completed. This design allows the application to track habits over time and makes it easier to calculate statistics such as weekly progress.
@@ -146,6 +144,24 @@ The `login_required` decorator was implemented in `helpers.py` to restrict acces
 Flask was chosen as the framework because it provides a lightweight and flexible way to build web applications in Python. SQLite was selected as the database because it is simple to set up, does not require a separate server, and works well for small to medium sized applications like this project.
 
 Finally, Jinja template inheritance was used with `layout.html` so that common elements such as the navigation bar and page styling do not need to be repeated in every HTML file. This makes the code easier to maintain and keeps the project structure clean.
+
+---
+
+### Usage
+
+1. Clone or download the project and navigate to the project folder.
+
+2. Install the required Python packages:
+
+   pip install -r requirements.txt
+
+3. Run the Flask application:
+
+   flask run
+
+4. Open the local URL shown in the terminal (usually http://127.0.0.1:5000) in your web browser.
+
+5. Register a new account and start adding habits to track your weekly progress.
 
 ---
 
