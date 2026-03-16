@@ -285,7 +285,7 @@ def register():
       return apology("Username already exists", 400)
     hash = generate_password_hash(password)
     db.execute("INSERT INTO users (username,hash) VALUES (?, ?)", username, hash)
-    flash("Registration successful! Please log in.")
+    flash("🎉 Registration successful! Please log in.")
 
     return redirect("/login")
   return render_template("register.html")
