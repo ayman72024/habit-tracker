@@ -13,3 +13,5 @@ def login_required(f):
     return decorated_function    
 def apology(message, code=400):
     return render_template("apology.html", message=message, code=code), code
+
+#This login_required was a solution given by ChatGpt for my definitions

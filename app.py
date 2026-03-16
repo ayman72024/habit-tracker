@@ -292,3 +292,5 @@ def register():
 
 if __name__ == "__main__":
   app.run(debug=True)
+
+#I wrote the code originally for all definitions and then cleared out the bugs using ChatGpt
